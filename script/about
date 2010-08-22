@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 require File.expand_path('../../config/boot',  __FILE__)
-$LOAD_PATH.unshift "#{RAILTIES_PATH}/builtin/rails_info"
-require 'commands/about'
+require File.expand_path('../../config/environment',  __FILE__)
 
-Redmine::About.print_plugin_info
+puts Redmine::About
