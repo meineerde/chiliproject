@@ -2,4 +2,19 @@
 require File.expand_path('../../config/boot',  __FILE__)
 require File.expand_path('../../config/environment',  __FILE__)
 
-puts Redmine::About
+def usage
+  puts <<-EOF
+About your Redmine's environment
+Usage:  script/about [options]
+
+        --gems        Include list of installed gems
+
+        -- help       This help text
+  EOF
+  exit(0)
+end
+
+usage if ARGV.include? "--help"
+options = ARGV.collect{|a| $1 if a =~ /--(\w+)/}.compact
+
+puts Redmine::About.info(options)
