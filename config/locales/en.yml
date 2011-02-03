@@ -797,6 +797,7 @@ en:
   label_unknown: Unknown
   label_plugin_name: Plugin name
   label_plugin_version: Plugin version
+  label_chiliproject_version: "ChiliProject version"
   
   button_login: Login
   button_submit: Submit

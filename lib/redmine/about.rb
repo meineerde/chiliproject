@@ -21,7 +21,8 @@ module Redmine
       end
       
       def info_title
-        { 'checklist' => 'Checklist',
+        { 'chiliproject' => 'ChiliProject',
+          'checklist' => 'Checklist',
           'rails' => 'Rails Info',
           'plugins' => 'Installed Plugins',
           'gems' => 'Installed Ruby Gems'
@@ -29,9 +30,9 @@ module Redmine
       end
       
       def print_environment_info(options = [])
-        options = (%w(checklist rails plugins) + options.collect(&:to_s)).uniq
+        options = (%w(chiliproject checklist rails plugins) + options.collect(&:to_s)).uniq
         
-        output =  "About your Redmine's environment\n"
+        output =  "About your ChiliProject's environment\n"
         output << "================================"
         
         environment = self.environment(options).inject({}) do |result, (name, info)|
@@ -50,7 +51,7 @@ module Redmine
         end
         
         output += options.collect do |option|
-          title = info_title[option] || option.to_s.humnize
+          title = info_title[option] || option.to_s.humanize
           print(title, environment.delete(option), column_width)
         end.join
         output
@@ -63,6 +64,12 @@ module Redmine
         end
       end
     
+      def environment_chiliproject
+        [
+          [:label_chiliproject_version, Redmine::VERSION.to_s]
+        ]
+      end
+
       def environment_checklist
         [
           [:text_default_administrator_account_changed, !!User.find(:first, :conditions => ["login=? and hashed_password=?", 'admin', User.hash_password('admin')]).nil?],
