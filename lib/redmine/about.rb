@@ -42,9 +42,12 @@ module Redmine
           end
           result
         end
-
+        
         # get overall width of label column
-        column_width = environment.inject(0){|width, (type, data)| [width, data.collect {|label, value| label.length }.max].max}
+        column_width = environment.inject(0) do |width, (type, data)|
+          option_length = data.collect {|label, value| label.length }.max || 0
+          [width, option_length].max
+        end
         
         output += options.collect do |option|
           title = info_title[option] || option.to_s.humnize
