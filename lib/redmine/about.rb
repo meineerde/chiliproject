@@ -101,7 +101,7 @@ module Redmine
 
         # Find database connection encoding
         encoding = case ActiveRecord::Base.connection.adapter_name
-        when 'Mysql'
+        when /mysql/i
           ActiveRecord::Base.connection.show_variable('character_set%')
         when 'PostgreSQL'
           ActiveRecord::Base.connection.encoding
