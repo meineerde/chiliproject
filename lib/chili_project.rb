@@ -11,6 +11,9 @@
 #
 # See doc/COPYRIGHT.rdoc for more details.
 #++
+require 'chili_project/liquid/variables'
+require 'chili_project/liquid/filters'
+require 'chili_project/liquid/tags'
 
 module ChiliProject
 end
