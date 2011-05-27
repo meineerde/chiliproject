@@ -112,6 +112,11 @@ class Attachment < ActiveRecord::Base
     "#{@@storage_path}/#{self.disk_filename}"
   end
 
+  def content_type
+    content_type = super
+    content_type.blank? ? Redmine::MimeType.of(filename) : content_type.to_s
+  end
+
   def increment_download
     increment!(:downloads)
   end
