@@ -17,7 +17,7 @@ require 'chili_project/liquid/tags'
 require 'chili_project/liquid/legacy'
 
 ChiliProject::Liquid::Legacy.add('child_pages', :tag)
-ChiliProject::Liquid::Legacy.add('include', :tag, 'include_page')
+ChiliProject::Liquid::Legacy.add('include', :tag)
 
 module ChiliProject
 end

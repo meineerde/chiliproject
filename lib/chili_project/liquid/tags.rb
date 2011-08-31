@@ -13,7 +13,7 @@ module ChiliProject
         end
         return options
       end
-        
+
       class TagError
         def initialize(tag_name, message)
           @tag_name = tag_name
@@ -28,14 +28,14 @@ module ChiliProject
 
       class Base < ::Liquid::Tag
       end
-      
+
       # TODO: migration from macros to Liquid
-      
+
       class HelloWorld < ::Liquid::Tag
         def initialize(tag_name, markup, tokens)
           super
         end
-        
+
         def render(context)
           "Hello world!"
         end
@@ -58,12 +58,12 @@ module ChiliProject
           content_tag('p', "Variables:") +
             content_tag('ul', out)
         end
-        
+
       end
 
       class TagList < ::Liquid::Tag
         include ActionView::Helpers::TagHelper
-        
+
         def render(context)
           content_tag('p', "Tags:") +
           content_tag('ul',
@@ -72,7 +72,7 @@ module ChiliProject
                       }.join(''))
         end
       end
-      
+
       class ChildPages < ::Liquid::Tag
         def initialize(tag_name, markup, tokens)
           super
@@ -98,7 +98,7 @@ module ChiliProject
           else
             return TagError.new('child_pages', 'With no argument, this tag can be called from projects only.').to_s
           end
-          
+
         end
 
         private
@@ -112,7 +112,7 @@ module ChiliProject
           pages = ([page] + page.descendants).group_by(&:parent_id)
           return context.registers[:view].render_page_hierarchy(pages, @options[:parent] ? page.parent_id : page.id)
         end
-        
+
         def render_all_pages(context)
           return '' unless @project.wiki.present? && @project.wiki.pages.present?
           return TagError.new('child_pages', 'Page not found').to_s if !User.current.allowed_to?(:view_wiki_pages, @project)
@@ -120,57 +120,6 @@ module ChiliProject
           return context.registers[:view].render_page_hierarchy(@project.wiki.pages.group_by(&:parent_id))
         end
       end
-
-      class IncludePage < ::Liquid::Tag
-
-        def initialize(tag_name, markup, tokens)
-          super
-          if markup.present?
-            @page_name = markup.gsub(/["']/,'').strip
-          end
-        end
-
-        def render(context)
-          @project = context['project'].object if context['project'].present?
-
-          if @page_name.present?
-            cross_project_page = @page_name.include?(':')
-
-            page = Wiki.find_page(@page_name.to_s, :project => (cross_project_page ? nil : @project))
-            return TagError.new('include_page', 'Page not found').to_s if page.nil? || !User.current.allowed_to?(:view_wiki_pages, page.wiki.project)
-            return TagError.new('include_page', 'Circular inclusion detected').to_s if circular_inclusion?(context, page)
-
-            add_page_to_included_page(context, page)
-            
-            # Call textilizable on the view so all of the helpers are loaded
-            # based on the view and not this tag
-            out = context.registers[:view].textilizable(page.content, :text, :attachments => page.attachments, :headings => false)
-            @included_wiki_pages.pop
-            return out
-
-          else
-            return TagError.new('include_page', 'Page not found').to_s
-          end
-        end
-        
-        private
-
-        def circular_inclusion?(context, page)
-          @included_wiki_pages = context['included_wiki_pages']
-          @included_wiki_pages ||= []
-          @included_wiki_pages.include?(page.title)
-        end
-
-        # Handle circular inclusion by storing a list of the already
-        # included pages into an ivar in the view. Then it will come
-        # into Liquid as part of context, which we can check.
-        #
-        def add_page_to_included_page(context, page)
-          @included_wiki_pages << page.title
-          context.registers[:view].instance_variable_set('@included_wiki_pages', @included_wiki_pages)
-        end
-      end
-
     end
   end
 end
@@ -179,4 +128,3 @@ Liquid::Template.register_tag('hello_world', ChiliProject::Liquid::Tags::HelloWo
 Liquid::Template.register_tag('variable_list', ChiliProject::Liquid::Tags::VariableList)
 Liquid::Template.register_tag('tag_list', ChiliProject::Liquid::Tags::TagList)
 Liquid::Template.register_tag('child_pages', ChiliProject::Liquid::Tags::ChildPages)
-Liquid::Template.register_tag('include_page', ChiliProject::Liquid::Tags::IncludePage)
