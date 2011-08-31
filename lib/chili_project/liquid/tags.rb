@@ -128,3 +128,6 @@ Liquid::Template.register_tag('hello_world', ChiliProject::Liquid::Tags::HelloWo
 Liquid::Template.register_tag('variable_list', ChiliProject::Liquid::Tags::VariableList)
 Liquid::Template.register_tag('tag_list', ChiliProject::Liquid::Tags::TagList)
 Liquid::Template.register_tag('child_pages', ChiliProject::Liquid::Tags::ChildPages)
+
+ChiliProject::Liquid::Legacy.add('child_pages', :tag)
+ChiliProject::Liquid::Legacy.add('include', :tag)
