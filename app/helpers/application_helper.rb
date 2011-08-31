@@ -481,7 +481,7 @@ module ApplicationHelper
     rescue Liquid::SyntaxError
       # Skip Liquid if there is a syntax error
     end
-    
+
     @parsed_headings = []
     text = parse_non_pre_blocks(text) do |text|
       [:parse_inline_attachments, :parse_wiki_links, :parse_redmine_links, :parse_headings].each do |method_name|
@@ -985,5 +985,5 @@ module ApplicationHelper
       acc
     end
   end
-  
+
 end
