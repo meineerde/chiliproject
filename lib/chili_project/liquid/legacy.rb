@@ -25,7 +25,7 @@ module ChiliProject
         macros.each do |macro_name, macro|
           next unless macro[:match].present? && macro[:replace].present?
           content.gsub!(macro[:match]) do |match|
-            # Use block form so $1 is set properly
+            # Use block form so $1 and $2 are set properly
             "{#{macro[:replace]} #{macro[:new_name]} '#{$2}' #{macro[:replace]}}"
           end
         end
