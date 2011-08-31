@@ -13,7 +13,7 @@ module ChiliProject
       #        "{{ }}" to "{% %}"
       # @param [String] :new_name The new name of the Liquid object
       @macros = {}
-    
+
       def self.macros
         @macros
       end
@@ -26,13 +26,11 @@ module ChiliProject
           next unless macro[:match].present? && macro[:replace].present?
           content.gsub!(macro[:match]) do |match|
             # Use block form so $1 is set properly
-            "{#{macro[:replace]} #{$1} #{macro[:replace]}}".
-              # Allow switching the macro name
-              sub(macro_name, macro[:new_name])
+            "{#{macro[:replace]} #{macro[:new_name]} '#{$2}' #{macro[:replace]}}"
           end
         end
       end
-    
+
       # Add support for a legacy macro syntax that was converted to liquid
       #
       # @param [String] name The legacy macro name
@@ -43,19 +41,19 @@ module ChiliProject
         new_name = name unless new_name.present?
         case liquid_type
         when :tag
-        
+
           @macros[name.to_s] = {
             # Example values the regex matches
             # {{name}}
             # {{ name }}
             # {{ name 'arg' }}
             # {{ name('arg') }}
-            :match => Regexp.new(/\{\{?.(#{name}.*?)\}\}/),
+            :match => Regexp.new(/\{\{(#{name})(?:\(([^\}]*)\))?\}\}/),
             :replace => "%",
             :new_name => new_name
           }
         end
-      
+
       end
     end
   end
