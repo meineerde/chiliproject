@@ -11,7 +11,6 @@
 #
 # See doc/COPYRIGHT.rdoc for more details.
 #++
-require 'chili_project/liquid'
 
 module ChiliProject
 end
