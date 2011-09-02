@@ -22,7 +22,7 @@ module Redmine
 
       class << self
         def register(&block)
-          ActiveSupport::Deprecation.warn("Macros are deprecated. Use Liquid filters and tags instead")
+          ActiveSupport::Deprecation.warn("Macros are deprecated. Use Liquid filters and tags instead", caller.drop(3))
           class_eval(&block) if block_given?
         end
 
