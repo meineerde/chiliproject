@@ -1,11 +1,4 @@
 class IssueDrop < BaseDrop
-
-  def initialize(object)
-    if object.visible?
-      @object = object
-    end
-  end
-
   allowed_methods :subject
   allowed_methods :description
   allowed_methods :project
@@ -24,11 +17,12 @@ class IssueDrop < BaseDrop
   allowed_methods :estimated_hours
   allowed_methods :parent
 
+private
   def custom_field(name)
     return '' unless name.present?
     custom_field = IssueCustomField.find_by_name(name.strip)
     return '' unless custom_field.present?
-    custom_value = @object.custom_value_for(custom_field)
+    custom_value = object.custom_value_for(custom_field)
     if custom_value.present?
       return custom_value.value
     else
@@ -37,7 +31,7 @@ class IssueDrop < BaseDrop
   end
 
   # TODO: both required, method_missing for Ruby and before_method for Liquid
-  
+
   # Allows accessing custom fields by their name:
   #
   # - issue.the_name_of_player => CustomField(:name => "The name Of Player")
@@ -62,10 +56,8 @@ class IssueDrop < BaseDrop
     end
   end
 
-  private
-
   def has_custom_field_with_matching_name?(method)
-    custom_field_with_matching_name = @object.available_custom_fields.detect {|custom_field|
+    custom_field_with_matching_name = object.available_custom_fields.detect {|custom_field|
       custom_field.name.downcase.underscore.gsub(' ','_') == method.to_s
     }
   end
