@@ -48,16 +48,9 @@ module Redmine
                 raise ::Liquid::SyntaxError.new("Syntax error in tag '#{name}'")
               end
             end
-
-            # to allow macros to access functions in the current view scope
-            def method_missing(method, *args)
-              @_context.registers[:view].send(method, *args)
-            end
           end
           tag.send :define_method, :render do |context|
-            @_context = context
-            @project = context['project'].object if context['project'].present?
-            instance_exec nil, @args, &block
+            context.registers[:view].instance_exec context.registers[:object], @args, &block
           end
           tag.const_set 'Syntax', /(#{::Liquid::QuotedFragment})/
 

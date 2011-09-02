@@ -469,7 +469,7 @@ module ApplicationHelper
       liquid_variables.merge!({'toc' => '{{toc}}'}) # Pass toc through to replace later
       liquid_variables.merge!(ChiliProject::Liquid::Variables.macro_backwards_compatibility)
       # Pass :view in a register so this view (with helpers) can be used inside of a tag
-      text = liquid_template.render(liquid_variables, :registers => {:view => self})
+      text = liquid_template.render(liquid_variables, :registers => {:view => self, :object => obj})
 
       # Add Liquid errors to the log
       if Rails.logger && Rails.logger.debug?
