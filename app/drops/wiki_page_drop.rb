@@ -1,5 +1,3 @@
 class WikiPageDrop < BaseDrop
-  def title
-    @object.title
-  end
+  allowed_methods :title
 end

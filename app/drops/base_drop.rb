@@ -1,10 +1,6 @@
 class BaseDrop < Liquid::Drop
   def initialize(object)
-    @object = object
-  end
-
-  def object
-    @object
+    @object = object unless object.respond_to?(:visible?) && !object.visible?
   end
 
   # Defines a Liquid method on the drop that is allowed to call the
@@ -20,5 +16,9 @@ class BaseDrop < Liquid::Drop
       end
     end
   end
-                           
+
+protected
+  def object
+    @object
+  end
 end

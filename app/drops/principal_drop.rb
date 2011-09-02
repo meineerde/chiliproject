@@ -1,5 +1,3 @@
 class PrincipalDrop < BaseDrop
-  def name
-    @object.name
-  end
+  allowed_methods :name
 end
