@@ -35,6 +35,6 @@ class BaseDrop < Liquid::Drop
   end
 
   def liquid_keys
-    self.class.liquid_keys.collect(&:to_s)
+    self.class.liquid_keys.collect(&:to_s).sort
   end
 end
