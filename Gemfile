@@ -6,7 +6,7 @@ gem "coderay", "~> 0.9.7"
 gem "i18n", "~> 0.4.2"
 gem "rubytree", "~> 0.5.2", :require => 'tree'
 gem "rdoc", ">= 2.4.2"
-gem "liquid", :git => "git://github.com/Shopify/liquid.git"
+gem "liquid", "~> 2.3.0"
 # Needed only on RUBY_VERSION = 1.8, ruby 1.9+ compatible interpreters should bring their csv
 gem "fastercsv", "~> 1.5.0", :platforms => [:ruby_18, :jruby, :mingw_18]
 
