@@ -1,5 +1,6 @@
 module ChiliProject::Liquid
   module Tags
+    class TagError < StandardError; end
 
     def self.register_tag(name, klass, options={})
       if options[:html]
