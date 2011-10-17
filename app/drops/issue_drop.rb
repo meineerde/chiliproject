@@ -1,4 +1,5 @@
 class IssueDrop < BaseDrop
+  allowed_methods :id
   allowed_methods :subject
   allowed_methods :description
   allowed_methods :project
