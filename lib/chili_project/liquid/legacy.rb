@@ -12,10 +12,8 @@ module ChiliProject
       # @param [String] :replace The string to replace with. E.g. "%" converts
       #        "{{ }}" to "{% %}"
       # @param [String] :new_name The new name of the Liquid object
-      @macros = {}
-
       def self.macros
-        @macros
+        @macros ||= {}
       end
 
       # "Runs" legacy macros by doing a gsub of their values to the new Liquid ones
@@ -42,7 +40,7 @@ module ChiliProject
         case liquid_type
         when :tag
 
-          @macros[name.to_s] = {
+          macros[name.to_s] = {
             # Example values the regex matches
             # {{name}}
             # {{ name }}
