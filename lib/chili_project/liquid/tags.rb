@@ -27,6 +27,7 @@ module ChiliProject::Liquid
     register_tag('include', Include, :html => true)
 
     register_tag('hello_world', HelloWorld)
+    register_tag('query', Query)
     register_tag('variable_list', VariableList, :html => true)
     register_tag('tag_list', TagList)
     register_tag('child_pages', ChildPages, :html => true)
