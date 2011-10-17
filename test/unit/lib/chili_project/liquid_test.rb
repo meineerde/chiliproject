@@ -160,6 +160,13 @@ class ChiliProject::LiquidTest < ActionView::TestCase
         assert_match /flash error/, formatted
         assert formatted.include?('No such page')
       end
+
+      should "HTML escape the error" do
+        text = "{% include '<script>alert(\"foo\"):</script>' %}"
+        formatted = textilizable(text)
+
+        assert formatted.include?("No such page '&lt;script&gt;alert(&quot;foo&quot;):&lt;/script&gt;'")
+      end
     end
 
     context "legacy" do
