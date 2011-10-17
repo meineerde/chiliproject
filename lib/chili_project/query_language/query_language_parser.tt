@@ -1,0 +1,97 @@
+module ChiliProject
+  module QueryLanguage
+    grammar QueryLanguage
+
+      rule filters
+        gutter filter ( newline filter )* gutter
+        {
+          def value
+            [elements[1].value] + elements[2].elements.collect do |e|
+              e.elements[1].value
+            end
+          end
+        }
+      end
+
+      rule filter
+        ws* attribute ws+ operator (ws+ values)? ws*
+        {
+          def value
+            {
+              :attribute => self.attribute.value,
+              :operator => self.operator.value,
+              :values => elements[4].present? ? elements[4].values.value : []
+            }
+          end
+        }
+      end
+
+      rule attribute
+        [\w]+
+        {
+          def value
+            self.text_value
+          end
+        }
+      end
+
+      rule operator
+        [\S]+ &{|op| Query.operators.keys.include? op[0].text_value}
+        {
+          def value
+            self.text_value
+          end
+        }
+      end
+
+      rule values
+        value ( ws* ',' ws* value )*
+        {
+          def value
+            [self.elements[0].value] + self.elements[1].elements.collect do |e|
+              e.elements[3].value
+            end
+          end
+        }
+      end
+
+      rule value
+        ( quoted_string / comma_delimited_string )
+      end
+
+      rule quoted_string
+        (
+          "'" (!"'" . / "\\'")* "'"
+          /
+          '"' (!'"' . / '\"' )* '"'
+        )
+        {
+          def value
+            elements[1].text_value
+          end
+        }
+      end
+
+      rule comma_delimited_string
+        (!(ws* "," / ws* newline) . / '\,')+
+        {
+          def value
+            self.text_value
+          end
+        }
+      end
+
+      rule ws
+        (" " / "\t")
+      end
+
+      rule newline
+        ("\n" / "\r\n")+
+      end
+
+      rule gutter
+        [\s]*
+      end
+    end
+  end
+end
