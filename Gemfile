@@ -10,6 +10,11 @@ gem "liquid", "~> 2.3.0"
 # Needed only on RUBY_VERSION = 1.8, ruby 1.9+ compatible interpreters should bring their csv
 gem "fastercsv", "~> 1.5.0", :platforms => [:ruby_18, :jruby, :mingw_18]
 
+group :development do
+  # For transforming grammars, only required if a grammar is changed.
+  gem 'treetop', "~> 1.4.10"
+end
+
 group :test do
   gem 'shoulda', '~> 2.10.3'
   gem 'edavis10-object_daddy', :require => 'object_daddy'
