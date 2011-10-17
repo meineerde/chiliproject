@@ -3,7 +3,7 @@ module ChiliProject::Liquid
     module StripNewlines
       def render_all(list, context)
         # Remove the leading newline in a block's content
-        list[0].sub!($/, "") if list[0].start_with?($/)
+        list[0].sub!(/\A\r?\n/, "")
         super
       end
     end
