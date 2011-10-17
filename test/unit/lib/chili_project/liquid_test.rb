@@ -161,5 +161,14 @@ class ChiliProject::LiquidTest < ActionView::TestCase
         assert formatted.include?('No such page')
       end
     end
+
+    context "legacy" do
+      should "map to native include" do
+        text = "{{include(#{@project2.identifier}:Second_Page)}}"
+        formatted = textilizable(text)
+
+        assert formatted.include?('second page')
+      end
+    end
   end
 end
