@@ -17,6 +17,19 @@ module ChiliProject
             html = '<div class="flash error">' + escaped_error + '</div>'
             html_result(html)
           end
+
+          def html_result(html)
+            key = nil
+            while key.nil? || html_results.has_key?(key)
+              key = ActiveSupport::SecureRandom.hex(10)
+            end
+            html_results[key] = html
+            "{{html_results.#{key}}}"
+          end
+
+          def html_results
+            registers[:html_results] ||= {}
+          end
         end
       end
     end

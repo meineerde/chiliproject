@@ -7,12 +7,7 @@ module ChiliProject::Liquid
         html_class = Class.new do
           def render(context)
             result = @tag.render(context)
-
-            context.registers[:html_tag_result] ||= []
-            length = context.registers[:html_tag_result].length
-            context.registers[:html_tag_result] << result
-
-            "{{html_tag_result.#{length}}}"
+            context.html_result(result)
           end
 
           def method_missing(*args, &block)
