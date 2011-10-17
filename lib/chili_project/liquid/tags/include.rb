@@ -43,11 +43,20 @@ module ChiliProject::Liquid::Tags
     end
 
     def _render_partial(partial, template, context)
-      text = partial.render(context)
+      textile = partial.render(context)
 
       # Call textilizable on the view so all of the helpers are loaded
       # based on the view and not this tag
-      context.registers[:view].textilizable(text, :attachments => template.page.attachments, :headings => false)
+      context.registers[:view].textilizable(textile, :attachments => template.page.attachments, :headings => false)
+    end
+
+    def _read_template_from_file_system(context)
+      wiki_content = super
+
+      # Set the new project to that additional includes use the correct
+      # base project
+      context['project'] = wiki_content.page.wiki.project
+      wiki_content
     end
   end
 end
