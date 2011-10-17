@@ -33,5 +33,9 @@ module ChiliProject::Liquid
   end
 end
 
-# ChiliProject::Liquid::Legacy.add('child_pages', :tag)
-# ChiliProject::Liquid::Legacy.add('include', :tag)
+# FIXME: remove the old syntax soon, provide a way to migrate existing pages
+# to the new syntax.
+# {{child_pages(Foo)}} --> {% child_pages 'Foo' %}
+ChiliProject::Liquid::Legacy.add('child_pages', :tag)
+# {{include(Foo)}} --> {% include 'Foo' %}
+ChiliProject::Liquid::Legacy.add('include', :tag)
