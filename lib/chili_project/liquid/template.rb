@@ -65,7 +65,7 @@ module ChiliProject
 
         # 3. Now finally, replace the captured raw HTML bits in the final content
         html_results.each_pair do |key, value|
-          text.sub!(/\{\{html_results\.#{key}\}\}/, value)
+          text.sub!("\{\{html_results\.#{key}\}\}") { |match| value }
         end
         text
       end
