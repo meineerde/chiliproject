@@ -592,7 +592,7 @@ RAW
 
 h1. Included
 
-{% include_page Child_1 %}
+{% include 'Child_1' %}
 RAW
 
     expected = '<ul class="toc">' +
