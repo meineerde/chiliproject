@@ -29,4 +29,9 @@ namespace :code do
       end
     end
   end
+
+  desc "Generate bundle treetop grammars"
+  task :treetop => :environment do
+    ChiliProject::QueryLanguage.compile!
+  end
 end
