@@ -22,11 +22,14 @@ module ChiliProject::Liquid
         html_class.send :define_method, :initialize do |*args|
           @tag = klass.new(*args)
         end
-        Liquid::Template.register_tag(name, html_class)
+        ::Liquid::Template.register_tag(name, html_class)
       else
-        Liquid::Template.register_tag(name, klass)
+        ::Liquid::Template.register_tag(name, klass)
       end
     end
+
+    # Overwrite the built-in include tag with our adapted version
+    register_tag('include', Include, :html => true)
 
     register_tag('hello_world', HelloWorld)
     register_tag('variable_list', VariableList, :html => true)
