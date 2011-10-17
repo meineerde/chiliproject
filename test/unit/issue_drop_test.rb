@@ -2,7 +2,7 @@ require File.expand_path('../../test_helper', __FILE__)
 
 class IssueDropTest < ActiveSupport::TestCase
   include ApplicationHelper
-  
+
   def setup
     @project = Project.generate!
     @issue = Issue.generate_for_project!(@project)
@@ -35,7 +35,7 @@ class IssueDropTest < ActiveSupport::TestCase
     should "IssueDrop##{attribute} should return the actual #{attribute} attribute" do
       assert @issue.respond_to?(attribute), "Issue does not have an #{attribute} method"
       assert @drop.respond_to?(attribute), "IssueDrop does not have an #{attribute} method"
-      
+
       assert_equal @issue.send(attribute), @drop.send(attribute)
     end
   end
@@ -51,9 +51,9 @@ class IssueDropTest < ActiveSupport::TestCase
       assert_equal "Second subject", @issue.reload.custom_value_for(@field_name_conflict).value
       @drop = IssueDrop.new(@issue)
     end
-      
+
     should "be accessible under #custom_field(name)" do
-      assert_equal @issue.reload.custom_value_for(@field).value, @drop.custom_field('The Name')
+      assert_equal @issue.reload.custom_value_for(@field).value, @drop.send(:custom_field, 'The Name')
     end
 
     should "be accessible under the custom field name (lowercase, underscored)" do
@@ -73,7 +73,7 @@ class IssueDropTest < ActiveSupport::TestCase
 
     @private_project = Project.generate!(:is_public => false)
     @private_issue = Issue.generate_for_project!(@private_project)
-    
+
     assert !@private_issue.visible?, "Issue is visible"
     @private_drop = IssueDrop.new(@private_issue)
     assert_equal nil, @private_drop.object

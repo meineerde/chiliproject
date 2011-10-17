@@ -14,7 +14,7 @@ class ChiliProject::LiquidTest < ActionView::TestCase
     should "render a list of the current variables" do
       text = "{% variable_list %}"
       formatted = textilizable(text)
-      
+
       assert formatted.include?('<ul>'), "Not in a list format"
       assert formatted.include?('current_user')
     end
@@ -49,7 +49,7 @@ class ChiliProject::LiquidTest < ActionView::TestCase
       end
 
     end
-    
+
     context "with a valid WikiPage arg" do
       should "list all child pages for the wiki page" do
         @project = Project.generate!.reload
@@ -78,7 +78,7 @@ class ChiliProject::LiquidTest < ActionView::TestCase
         assert formatted.include?('Child1')
         assert !formatted.include?('Top')
       end
-  
+
       should "show the WikiPage when parent=1 is set" do
         @project = Project.generate!.reload
         wiki = @project.wiki
@@ -104,15 +104,15 @@ class ChiliProject::LiquidTest < ActionView::TestCase
 
         text = "{% child_pages 1 %}"
         formatted = textilizable(text)
-        
+
         assert_match /flash error/, formatted
-        assert formatted.include?('Page not found')
+        assert formatted.include?('No such page')
 
       end
     end
   end
 
-  context "include_page tag" do
+  context "include tag" do
     setup do
       @project = Project.generate!.reload
       @wiki = @project.wiki
@@ -122,10 +122,10 @@ class ChiliProject::LiquidTest < ActionView::TestCase
       @cross_project_page = WikiPage.generate!(:wiki => @project2.wiki, :title => 'Second_Page', :content => WikiContent.new(:text => 'second page'))
 
     end
-    
+
     context "with a direct page" do
       should "show the included page's content" do
-        text = "{% include_page 'Included Page' %}"
+        text = "{% include 'Included Page' %}"
         formatted = textilizable(text)
 
         assert formatted.include?('included page')
@@ -134,7 +134,7 @@ class ChiliProject::LiquidTest < ActionView::TestCase
 
     context "with a cross-project page" do
       should "show the included page's content" do
-        text = "{% include_page #{@project2.identifier}:'Second Page' %}"
+        text = "{% include '#{@project2.identifier}:Second Page' %}"
         formatted = textilizable(text)
 
         assert formatted.include?('second page')
@@ -143,24 +143,23 @@ class ChiliProject::LiquidTest < ActionView::TestCase
 
     context "with a circular inclusion" do
       should "render a warning" do
-        circle_page = WikiPage.generate!(:wiki => @wiki, :title => 'Circle', :content => WikiContent.new(:text => '{% include_page Circle2 %}'))
-        circle_page2 = WikiPage.generate!(:wiki => @wiki, :title => 'Circle2', :content => WikiContent.new(:text => '{% include_page Circle %}'))
+        circle_page = WikiPage.generate!(:wiki => @wiki, :title => 'Circle', :content => WikiContent.new(:text => '{% include Circle2 %}'))
+        circle_page2 = WikiPage.generate!(:wiki => @wiki, :title => 'Circle2', :content => WikiContent.new(:text => '{% include Circle %}'))
         formatted = textilizable(circle_page.reload.text)
 
         assert_match /flash error/, formatted
         assert formatted.include?('Circular inclusion detected')
       end
     end
-    
+
     context "with an invalid arg" do
       should "render a warning" do
-        text = "{% include_page '404' %}"
+        text = "{% include '404' %}"
         formatted = textilizable(text)
 
         assert_match /flash error/, formatted
-        assert formatted.include?('Page not found')
+        assert formatted.include?('No such page')
       end
     end
   end
-  
 end
