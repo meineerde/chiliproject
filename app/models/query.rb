@@ -520,6 +520,10 @@ class Query < ActiveRecord::Base
     raise Query::StatementInvalid.new(e.message)
   end
 
+  def to_liquid
+    QueryDrop.new(self)
+  end
+
   private
 
   # Helper method to generate the WHERE sql for a +field+, +operator+ and a +value+
