@@ -18,7 +18,8 @@ module ChiliProject
       def self.highlight_by_language(text, language, options={})
         default_options = {
           :line_numbers => :inline,
-          :warp => :span
+          :line_number_anchors => false,
+          :wrap => :span
         }
 
         options = default_options.merge options
