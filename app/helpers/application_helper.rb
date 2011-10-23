@@ -325,7 +325,7 @@ module ApplicationHelper
   end
 
   def syntax_highlight(name, content)
-    Redmine::SyntaxHighlighting.highlight_by_filename(content, name)
+    ChiliProject::SyntaxHighlighting.highlight_by_filename(content, name)
   end
 
   def to_path_param(path)
