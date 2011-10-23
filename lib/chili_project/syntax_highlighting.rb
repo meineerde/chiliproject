@@ -22,12 +22,12 @@ module ChiliProject
         @highlighter ||= ChiliProject::SyntaxHighlighting::CodeRay
       end
 
-      def highlight_by_filename(text, filename)
-        highlighter.highlight_by_filename(text, filename)
+      def highlight_by_filename(text, filename, options={})
+        highlighter.highlight_by_filename(text, filename, options)
       end
 
-      def highlight_by_language(text, language)
-        highlighter.highlight_by_language(text, language)
+      def highlight_by_language(text, language, options = {})
+        highlighter.highlight_by_language(text, language, options)
       end
     end
   end
