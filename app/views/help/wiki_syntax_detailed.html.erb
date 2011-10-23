@@ -1,33 +1,21 @@
-<% content_for :styles do %>
-    body { font:80% Verdana,Tahoma,Arial,sans-serif; }
-    h1, h2, h3, h4 {  font-family: Trebuchet MS,Georgia,"Times New Roman",serif; }
-    pre, code { font-size:120%; }
-    pre code { font-size:100%; }
-    pre {
-        margin: 1em 1em 1em 1.6em;
-        padding: 2px;
-        background-color: #fafafa;
-        border: 1px solid #dadada;
-        width:95%;
-        overflow-x: auto;
-    }
-    a.new { color: #b73535; }
-
-    .CodeRay .c  { color:#666; }
-
-    .CodeRay .cl { color:#B06; font-weight:bold }
-    .CodeRay .dl { color:black }
-    .CodeRay .fu { color:#06B; font-weight:bold }
-
-    .CodeRay .il { background: #eee }
-    .CodeRay .il .idl { font-weight: bold; color: #888 }
-
-    .CodeRay .iv { color:#33B }
-    .CodeRay .r  { color:#080; font-weight:bold }
-
-    .CodeRay .s  { background-color:#fff0f0 }
-    .CodeRay .s  .dl { color:#710 }
+<% content_for :styles do -%>
+  body { font:80% Verdana,Tahoma,Arial,sans-serif; }
+  h1, h2, h3, h4 {  font-family: Trebuchet MS,Georgia,"Times New Roman",serif; }
+  pre, code { font-size:120%; }
+  pre code { font-size:100%; }
+  pre {
+    margin: 1em 1em 1em 1.6em;
+    padding: 2px;
+    background-color: #fafafa;
+    border: 1px solid #dadada;
+    width:95%;
+    overflow-x: auto;
+  }
+  a.new { color: #b73535; }
 <% end %>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'scm' %>
+<% end -%>
 
 <% html_title "Wiki Formatting" %>
 <h1><a name="1" class="wiki-page"></a>Wiki Formatting</h1>
@@ -246,17 +234,20 @@ To go live, all you need to add is a database and a web server.
 &lt;/code&gt;&lt;/pre&gt;
 </pre>
 
-    <p>Example:</p>
+<p>Example:</p>
+<% example = <<-EOF
+# The Greeter class
+class Greeter
+  def initialize(name)
+    @name = name.capitalize
+  end
 
-<pre><code class="ruby CodeRay"><span class="no"> 1</span> <span class="c"># The Greeter class</span>
-<span class="no"> 2</span> <span class="r">class</span> <span class="cl">Greeter</span>
-<span class="no"> 3</span>   <span class="r">def</span> <span class="fu">initialize</span>(name)
-<span class="no"> 4</span>     <span class="iv">@name</span> = name.capitalize
-<span class="no"> 5</span>   <span class="r">end</span>
-<span class="no"> 6</span>
-<span class="no"> 7</span>   <span class="r">def</span> <span class="fu">salute</span>
-<span class="no"> 8</span>     puts <span class="s"><span class="dl">"</span><span class="k">Hello </span><span class="il"><span class="idl">#{</span><span class="iv">@name</span><span class="idl">}</span></span><span class="k">!</span><span class="dl">"</span></span>
-<span class="no"> 9</span>   <span class="r">end</span>
-<span class="no"><strong>10</strong></span> <span class="r">end</span>
-</code>
-</pre>
+  def salute
+    puts "Hello #{@name}!"
+  end
+end
+EOF
+example.strip!
+%>
+
+<pre><code class="ruby syntaxhl"><%=  ChiliProject::SyntaxHighlighting.highlight_by_language(example, 'ruby') %></code></pre>
