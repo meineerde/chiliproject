@@ -56,7 +56,9 @@ module ChiliProject
       #
       def render(*args)
         return '' if @root.nil?
+
         context = context_from_render_options(*args)
+        context.registers[:html_results] ||= {}
 
         # ENTER THE RENDERING STAGE
 
