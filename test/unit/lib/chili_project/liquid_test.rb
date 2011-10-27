@@ -160,12 +160,12 @@ class ChiliProject::LiquidTest < ActionView::TestCase
 
     context "with a circular inclusion" do
       should "render a warning" do
-        circle_page = WikiPage.generate!(:wiki => @wiki, :title => 'Circle', :content => WikiContent.new(:text => '{% include Circle2 %}'))
-        circle_page2 = WikiPage.generate!(:wiki => @wiki, :title => 'Circle2', :content => WikiContent.new(:text => '{% include Circle %}'))
+        circle_page = WikiPage.generate!(:wiki => @wiki, :title => 'Circle', :content => WikiContent.new(:text => '{% include "Circle2" %}'))
+        circle_page2 = WikiPage.generate!(:wiki => @wiki, :title => 'Circle2', :content => WikiContent.new(:text => '{% include "Circle" %}'))
         formatted = textilizable(circle_page.reload.text)
 
         assert_match /flash error/, formatted
-        assert formatted.include?('Circular inclusion detected')
+        assert_match 'Circular inclusion detected', formatted
       end
     end
 
