@@ -8,6 +8,41 @@ module ChiliProject
         template
       end
 
+
+      def context_from_render_options(*args)
+        # This method is pulled straight from the original
+        # Liquid::Template#render
+        context = case args.first
+        when ::Liquid::Context
+          args.shift
+        when Hash
+          ::Liquid::Context.new([args.shift, assigns], instance_assigns, registers, @rethrow_errors)
+        when nil
+          ::Liquid::Context.new(assigns, instance_assigns, registers, @rethrow_errors)
+        else
+          raise ArgumentError, "Expect Hash or Liquid::Context as parameter"
+        end
+
+        case args.last
+        when Hash
+          options = args.pop
+
+          if options[:registers].is_a?(Hash)
+            self.registers.merge!(options[:registers])
+          end
+
+          if options[:filters]
+            context.add_filters(options[:filters])
+          end
+
+        when Module
+          context.add_filters(args.pop)
+        when Array
+          context.add_filters(args.pop)
+        end
+        context
+      end
+
       # Render takes a hash with local variables.
       #
       # if you use the same filters over and over again consider registering them globally
@@ -20,54 +55,33 @@ module ChiliProject
       #    filters and tags and might be useful to integrate liquid more with its host application
       #
       def render(*args)
-        # Force the html_tag_result variable to nil
-        # This is a safety measure to make sure that the internal rendered HTML
-        # can not be accessed on the outside during the Liquid rendering phase
-        #
-        # It is used internally to move handle the output of HTML producing
-        # tags. These are included at the very last stage, after the Wiki markup
-        # to HTML transformation
-        case args.first
-        when ::Liquid::Context
-          args.first.environments[0]['html_tag_result'] = nil
-        when Hash
-          args.first['html_results'] = nil
-        when nil
-          args.first = {'html_results' => nil}
-        end
-
-        case args.last
-        when Hash
-          options = args.last
-        when Module, Array
-          options = args.last = {:filters => args.last}
-        else
-          options = args.last = {}
-        end
-
-        # We get hold of the registers hash here for later usage.
-        # Yes, this is a bit ugly but required as we have no access to the
-        # actually used context object here which holds the values.
-        options[:registers] ||= {}
-        options[:registers][:html_results] = html_results = {}
-
-        obj = options[:registers][:object]
-        attr = options[:registers][:attribute]
+        return '' if @root.nil?
+        context = context_from_render_options(*args)
 
         # ENTER THE RENDERING STAGE
 
         # 1. Render the input as Liquid
         #    Some tags might register final HTML output in this stage.
-        text = super(*args)
+        begin
+          # for performance reasons we get a array back here. join will make a string out of it
+          result = @root.render(context)
+          result.respond_to?(:join) ? result.join : result
+        ensure
+          @errors = context.errors
+        end
 
         # 2. Perform the Wiki markup transformation (e.g. Textile)
-        text = Redmine::WikiFormatting.to_html(Setting.text_formatting, text, :object => obj, :attribute => attr)
+        obj = context.registers[:object]
+        attr = context.registers[:attribute]
+        result = Redmine::WikiFormatting.to_html(Setting.text_formatting, result, :object => obj, :attribute => attr)
 
         # 3. Now finally, replace the captured raw HTML bits in the final content
-        html_results.each_pair do |key, value|
-          text.sub!("\{\{html_results\.#{key}\}\}") { |match| value }
+        context.registers[:html_results].delete_if do |key, value|
+          # We use the block variant to avoid the evaluation of escaped
+          # characters in +value+ during substitution.
+          result.sub!("!!html_results.#{key}!!") { |match| value }
         end
-        text
+        result
       end
     end
   end
