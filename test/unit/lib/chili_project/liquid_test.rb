@@ -141,6 +141,23 @@ class ChiliProject::LiquidTest < ActionView::TestCase
       end
     end
 
+    context "with recursive includes" do
+      should "render all child pages" do
+        parent = WikiPage.generate!(:wiki => @wiki, :title => 'Recursive_Parent', :content => WikiContent.new(:text => "h1. Parent\r\n{% include 'Recursive_Child1' %}"))
+        child1 = WikiPage.generate!(:wiki => @wiki, :title => 'Recursive_Child1', :content => WikiContent.new(:text => "h1. Child1\r\n{% include 'Recursive_Child2' %}"))
+        child2 = WikiPage.generate!(:wiki => @wiki, :title => 'Recursive_Child2', :content => WikiContent.new(:text => 'h1. Child2'))
+
+        formatted = textilizable(parent.reload.text)
+
+        assert_match /<h1.*?>\s*Parent.*?<\/h1>/, formatted
+        assert_match /<h1.*?>\s*Child1.*?<\/h1>/, formatted
+        assert_match /<h1.*?>\s*Child2.*?<\/h1>/, formatted
+
+        # make sure there are no dangling html result variables
+        assert_no_match /!!html_results.*?!!/, formatted
+      end
+    end
+
     context "with a circular inclusion" do
       should "render a warning" do
         circle_page = WikiPage.generate!(:wiki => @wiki, :title => 'Circle', :content => WikiContent.new(:text => '{% include Circle2 %}'))
