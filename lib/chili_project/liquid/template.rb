@@ -79,7 +79,7 @@ module ChiliProject
         context.registers[:html_results].delete_if do |key, value|
           # We use the block variant to avoid the evaluation of escaped
           # characters in +value+ during substitution.
-          result.sub!("!!html_results.#{key}!!") { |match| value }
+          result.sub!(key) { |match| value }
         end
         result
       end
