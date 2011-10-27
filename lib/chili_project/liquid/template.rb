@@ -78,11 +78,17 @@ module ChiliProject
         result = Redmine::WikiFormatting.to_html(Setting.text_formatting, result, :object => obj, :attribute => attr)
 
         # 3. Now finally, replace the captured raw HTML bits in the final content
-        context.registers[:html_results].delete_if do |key, value|
-          # We use the block variant to avoid the evaluation of escaped
-          # characters in +value+ during substitution.
-          result.sub!(key) { |match| value }
+        length = nil
+        # replace HTML results until we can find no additional variables
+        while length != context.registers[:html_results].length do
+          length = context.registers[:html_results].length
+          context.registers[:html_results].delete_if do |key, value|
+            # We use the block variant to avoid the evaluation of escaped
+            # characters in +value+ during substitution.
+            result.sub!(key) { |match| value }
+          end
         end
+
         result
       end
     end
