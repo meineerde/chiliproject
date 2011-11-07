@@ -55,7 +55,7 @@ module Redmine
           tag.const_set 'Syntax', /(#{::Liquid::QuotedFragment})/
 
           Dispatcher.to_prepare do
-            Liquid::Template.register_tag(name, tag)
+            ChiliProject::Liquid::Tags.register_tag(name, tag, :html => true)
             ChiliProject::Liquid::Legacy.add(name, :tag)
           end
         end
