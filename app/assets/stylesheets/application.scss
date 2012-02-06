@@ -2,3 +2,26 @@
 @import "compass";
 
 @import "colors";
+@import "helpers";
+
+// from https://github.com/h5bp/html5-boilerplate/blob/master/css/style.css
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  font-size: 1em;
+  line-height: 1.25;
+  min-width: 900px;
+
+  font-family: Arial, sans-serif;
+
+  background-color: $color-4-background;
+  color: $color-4-front;
+}
+
+input {
+  font-size: 1em;
+}
