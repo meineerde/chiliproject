@@ -1,0 +1,96 @@
+$gutter: .75em;
+
+#top-menu {
+  a {
+    color: $color-0-front;
+    text-decoration: none;
+  }
+}
+
+#header {
+  background-color: $color-0-background;
+  color: $color-0-front;
+  padding: 0 $gutter;
+  @include clearfix;
+}
+
+#logo {
+  font-size: 2em; // 24 px
+  @include min-width(200px);
+  @include float-left;
+}
+
+#top-menu-items {
+  @include float-right;
+
+  form {
+    display: inline;
+  }
+}
+
+#search {
+  font-size: .75em; // 12px
+  margin: .5em 1.5em;
+  @include float-left;
+
+  background-color: $color-1-background;
+  @include single-box-shadow($color-1-border-dark, -1px, 1px, 3px, false, inset);
+  @include background-image(linear-gradient($color-1-border-dark, $color-1-background));
+
+  border: 1px solid $color-1-border-dark;
+  border-bottom: 1px solid $color-1-border-light;
+  @include border-radius(4px);
+
+  input {
+    background: image-url("loupe.png") transparent no-repeat scroll 11.5em 50%;
+    color: $color-1-front;
+    padding: .5em 2em .5em 1em;
+    width: 10em;
+    border: 0 none;
+  }
+}
+
+#account-nav {
+  @include float-left;
+  font-size: .8125em;
+
+  > li {
+    @include float-left;
+    list-style-type: none;
+    border-left: 1px solid $color-0-background;
+
+    > a {
+      display: block;
+      padding: .875em;
+      border-top: 1px solid $color-special-background;
+      border-bottom: 1px solid $color-special-background;
+
+      background: $color-special-background;
+      color: $color-special-front;
+    }
+
+    a.home {
+      background: image-url("icon_home.png") $color-special-background no-repeat scroll center center;
+      text-indent: -999em;
+      width: 20px;
+    }
+  }
+
+  li.drop-down {
+    > a {
+      background: image-url("arrow-down-white.png") $color-special-background no-repeat scroll right center;
+      padding-right: 28px;
+    }
+  }
+}
+
+#breadcrumb {
+  background: $color-3-background;
+  color: $color-3-front;
+  @include background-image(linear-gradient(lighten($color-3-background, 10%), $color-3-background));
+
+  border-bottom: 1px solid $color-3-border;
+  padding: .5em $gutter;
+
+  @include clearfix;
+}
