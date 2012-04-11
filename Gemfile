@@ -44,7 +44,7 @@ group :rmagick do
   #   * RedHat 5 and older
   #
   #gem "rmagick", "< 2.0.0"
-end
+end if !ENV['TRAVIS'] # Don't install rmagick on travis as we don't have any tests anyway
 
 # Use the commented pure ruby gems, if you have not the needed prerequisites on
 # board to compile the native ones.  Note, that their use is discouraged, since
@@ -55,29 +55,29 @@ end
 platforms :mri, :mingw do
   group :mysql2 do
     gem "mysql2", "~> 0.2.7"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_MYSQL2']
 
   group :postgres do
     gem "pg"
     #   gem "postgres-pr"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_POSTGRES']
 end
 
 platforms :mri_18, :mingw_18 do
   group :mysql do
     gem "mysql"
     #   gem "ruby-mysql"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_MYSQL']
 
   group :sqlite do
     gem "sqlite3-ruby", "< 1.3", :require => "sqlite3"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_SQLITE']
 end
 
 platforms :mri_19, :mingw_19 do
   group :sqlite do
     gem "sqlite3"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_SQLITE']
 end
 
 platforms :jruby do
@@ -85,15 +85,15 @@ platforms :jruby do
 
   group :mysql do
     gem "activerecord-jdbcmysql-adapter"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_MYSQL']
 
   group :postgres do
     gem "activerecord-jdbcpostgresql-adapter"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_POSTGRES']
 
   group :sqlite do
     gem "activerecord-jdbcsqlite3-adapter"
-  end
+  end if !ENV['TRAVIS'] || ENV['TRAVIS_SQLITE']
 end
 
 # Load a "local" Gemfile

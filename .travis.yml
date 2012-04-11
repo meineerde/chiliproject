@@ -1,0 +1,23 @@
+language: ruby
+rvm:
+  - 1.8.7
+  # - 1.9.3
+env:
+  # - TRAVIS_MYSQL=true
+  # - TRAVIS_MYSQL2=true
+  # - TRAVIS_POSTGRES=true
+  - TRAVIS_SQLITE=true
+matrix:
+  exclude:
+    - rvm: 1.9.3
+      env: TRAVIS_MYSQL=true
+
+branches:
+  only:
+    - travis_master
+
+# Create the database.yml, create the database and migrate
+before_script:
+  - sudo apt-get update
+  - sudo apt-get install -y subversion git
+  - bundle exec rake ci:travis:prepare
