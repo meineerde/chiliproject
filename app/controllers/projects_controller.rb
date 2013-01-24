@@ -146,7 +146,7 @@ class ProjectsController < ApplicationController
 
     respond_to do |format|
       format.html
-      format.api
+      #format.api
     end
   end
 

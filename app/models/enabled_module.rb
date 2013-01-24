@@ -20,6 +20,8 @@ class EnabledModule < ActiveRecord::Base
 
   after_create :module_enabled
 
+  attr_accessible :name
+
   private
 
   # after_create callback used to do things when a module is enabled

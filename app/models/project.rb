@@ -65,14 +65,16 @@ class Project < ActiveRecord::Base
 
   attr_protected :status
 
+
   validates_presence_of :name, :identifier
   validates_uniqueness_of :identifier
-  validates_associated :repository, :wiki
+  #validates_associated :repository, :wiki
   validates_length_of :name, :maximum => 255
   validates_length_of :homepage, :maximum => 255
   validates_length_of :identifier, :in => 1..IDENTIFIER_MAX_LENGTH
-  # donwcase letters, digits, dashes but not digits only
-  validates_format_of :identifier, :with => /^(?!\d+$)[a-z0-9\-_]*$/, :if => Proc.new { |p| p.identifier_changed? }
+  # downcase letters, digits, dashes but not digits only
+  validates_format_of :identifier, :with => /^[a-z0-9\-_]*$/, :if => :identifier_changed?
+  validates_format_of :identifier, :without => /^\d+$/, :if => :identifier_changed?
   # reserved words
   validates_exclusion_of :identifier, :in => %w( new )
 
@@ -105,12 +107,12 @@ class Project < ActiveRecord::Base
     ProjectDrop.new(self)
   end
 
-  def initialize(attributes = nil)
+  def initialize(attributes=nil, *args)
     super
 
     initialized = (attributes || {}).stringify_keys
     if !initialized.key?('identifier') && Setting.sequential_project_identifiers?
-      self.identifier = Project.next_identifier
+      self.identifier = Project.next_identifier || "project-1"
     end
     if !initialized.key?('is_public')
       self.is_public = Setting.default_projects_public?
@@ -123,13 +125,15 @@ class Project < ActiveRecord::Base
     end
   end
 
+  # attr_readonly :identifier
   def identifier=(identifier)
     super unless identifier_frozen?
   end
 
   def identifier_frozen?
-    errors[:identifier].nil? && !(new_record? || identifier.blank?)
+    errors[:identifier].blank? && !(new_record? || identifier.blank?)
   end
+
 
   # returns latest created projects
   # non public projects will be returned only if user is a member of those

@@ -19,7 +19,10 @@ module ActiveRecord
     include Redmine::I18n
 
     # Translate attribute names for validation errors display
-    def self.human_attribute_name(attr)
+    def self.human_attribute_name(*args)
+      attr = args.first
+      p args if args.length > 1
+
       l("field_#{attr.to_s.gsub(/_id$/, '')}")
     end
   end
