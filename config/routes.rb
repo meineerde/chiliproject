@@ -24,7 +24,65 @@ ChiliProject::Application.routes.draw do
     get 'activate'
   end
 
-  resources :p, :controller => :projects, :as => :projects do
+  resources :roles, :only => [:index, :new, :edit, :destroy] do
+    collection do
+      get 'report'
+    end
+  end
+
+  resources :trackers, :only => [:index, :new, :edit, :destroy]
+
+  resources :workflows, :only => [:index] do
+    collection do
+      match 'edit', :via => [:get, :post]
+      match 'copy', :via => [:get, :post]
+    end
+  end
+
+  resources :custom_fields, :only => [:index, :destroy] do
+    collection do
+      match 'new', :via => [:get, :post]
+      match 'edit', :via => [:get, :post]
+    end
+  end
+
+  resources :enumerations, :only => [:index, :new, :create, :edit, :update, :destroy] do
+    collection do
+      get 'list'
+    end
+  end
+
+  resources :settings, :only => [:index] do
+    collection do
+      match 'edit', :via => [:get, :post]
+      match 'plugin', :via => [:get, :post]
+    end
+  end
+
+  resources :ldap_auth_sources, :only => [:index, :new, :create, :edit, :update, :destroy] do
+    get 'test_connection'
+  end
+
+  resources :issue_statuses, :only => [:index, :new, :edit, :update, :destroy] do
+    collection do
+      post 'update_issue_done_ratio'
+    end
+  end
+
+  get 'my' => 'my#index'
+  resource :my, :controller => 'my', :only => [] do
+    get 'page'
+    get 'account'
+  end
+
+  get 'admin' => 'admin#index'
+  resource :admin, :controller => 'admin', :only => [] do
+    get 'projects'
+    get 'plugins'
+    get 'info'
+  end
+
+  resources :projects do
     get 'activity' => 'activities#index' # CHANGED :id is not :project_id
     post 'archive' # should be PUT?
     get 'copy'
