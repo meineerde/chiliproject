@@ -61,7 +61,7 @@
 
   <div class="description">
 	  <div class="contextual">
-	    <%= link_to_remote_if_authorized(l(:button_quote), { :url => {:controller => 'journals', :action => 'new', :id => @issue} }, :class => 'icon icon-comment') %>
+	    <%= link_to_if_authorized(l(:button_quote), { :url => {:controller => 'journals', :action => 'new', :id => @issue} }, :remote => true, :class => 'icon icon-comment') %>
 	  </div>
 
 	  <p><strong><%=l(:field_description)%></strong></p>
@@ -121,7 +121,7 @@
   </div>
 <% end %>
 
-<% other_formats_links do |f| %>
+<%= other_formats_links do |f| %>
 	<%= f.link_to 'Atom', :url => {:key => User.current.rss_key} %>
 	<%= f.link_to 'PDF' %>
 <% end %>

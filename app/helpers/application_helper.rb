@@ -37,12 +37,6 @@ module ApplicationHelper
     link_to(name, options, html_options, *parameters_for_method_reference) if authorize_for(options[:controller] || params[:controller], options[:action])
   end
 
-  # Display a link to remote if user is authorized
-  def link_to_remote_if_authorized(name, options = {}, html_options = nil)
-    url = options[:url] || {}
-    link_to_remote(name, options, html_options) if authorize_for(url[:controller] || params[:controller], url[:action])
-  end
-
   # Displays a link to user's account page if active
   def link_to_user(user, options={})
     if user.is_a?(User)
@@ -388,9 +382,10 @@ module ApplicationHelper
   end
 
   def other_formats_links(&block)
-    concat('<p class="other-formats">' + l(:label_export_to))
-    yield Redmine::Views::OtherFormatsBuilder.new(self)
-    concat('</p>')
+    content_tag :p, :class => "other-formats" do
+      concat l(:label_export_to)
+      concat capture(Redmine::Views::OtherFormatsBuilder.new(self), &block)
+    end
   end
 
   def page_header_title
@@ -843,10 +838,11 @@ module ApplicationHelper
     content_tag("label", label_text)
   end
 
-  def labelled_tabular_form_for(name, object, options, &proc)
+  def labelled_tabular_form_for(record, options = {} , &proc)
     options[:html] ||= {}
     options[:html][:class] = 'tabular' unless options[:html].has_key?(:class)
-    form_for(name, object, options.merge({ :builder => TabularFormBuilder, :lang => current_language}), &proc)
+    # TODO: no mention of lang in actionview, probably not needed anymore
+    form_for(record, options.merge({ :builder => TabularFormBuilder, :lang => current_language}), &proc)
   end
 
   def back_url_hidden_field_tag

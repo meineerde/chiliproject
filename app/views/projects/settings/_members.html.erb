@@ -19,7 +19,7 @@
   <td class="roles">
     <span id="member-<%= member.id %>-roles"><%=h member.roles.sort.collect(&:to_s).join(', ') %></span>
     <% if authorize_for('members', 'edit') %>
-      <% remote_form_for(:member, member, :url => {:controller => 'members', :action => 'edit', :id => member},
+      <%= form_for(member, :remote => true, :url => {:controller => 'members', :action => 'edit', :id => member},
       																		:method => :post,
       																		:html => { :id => "member-#{member.id}-roles-form", :class => 'hol' }) do |f| %>
       	<p><% roles.each do |role| %>
@@ -34,10 +34,11 @@
   </td>
   <td class="buttons">
       <%= link_to_function l(:button_edit), "$('member-#{member.id}-roles').hide(); $('member-#{member.id}-roles-form').show(); return false;", :class => 'icon icon-edit' %>
-      <%= link_to_remote(l(:button_delete), { :url => {:controller => 'members', :action => 'destroy', :id => member},
+      <%= link_to(l(:button_delete), { :url => {:controller => 'members', :action => 'destroy', :id => member},
                                               :method => :post,
                                               :confirm => (!User.current.admin? && member.include?(User.current) ? l(:text_own_membership_delete_confirmation) : nil)
-                                            }, :title => l(:button_delete),
+                                            }, :remote => true,
+                                               :title => l(:button_delete),
                                                :class => 'icon icon-del') if member.deletable? %>
   </td>
   <%= call_hook(:view_projects_settings_members_table_row, { :project => @project, :member => member}) %>
@@ -55,7 +56,7 @@
 
 <div class="splitcontentright">
 <% if roles.any? && principals.any? %>
-  <% remote_form_for(:member, @member, :url => {:controller => 'members', :action => 'new', :id => @project}, :method => :post,
+  <%= form_for(@member, :remote => true, :url => {:controller => 'members', :action => 'new', :id => @project}, :method => :post,
 									   :loading => '$(\'member-add-submit\').disable();',
 									   :complete => 'if($(\'member-add-submit\')) $(\'member-add-submit\').enable();') do |f| %>
     <fieldset><legend><%=l(:label_member_new)%></legend>

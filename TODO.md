@@ -3,11 +3,14 @@
 * Remove rfpdf and move to prawn instead
 ** this removes the need to patch the rfpdf plugin
 * review changes to openid_authentication
-* review changes to rourtes and adapt controllers as necessary
+* refactor routes and controllers to REST/Rails 3 style
+* refactor MenuHelper to avoid explicit `html_safe` calls
+* refactor TabularFormBuilder to avoid explicit `html_safe` calls
 
 TO REVIEW:
 ==========
 
+UJS, html escaping and ARel compatibility everywhere, see TODO.filelist
 User.in_group
 User.not_in_group
 News.latest
